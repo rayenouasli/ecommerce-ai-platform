@@ -1,9 +1,12 @@
-import React from 'react'
 
-function layout({children}: {children: React.ReactNode}) {
+import { ClerkProvider } from "@clerk/nextjs";
+
+function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>layout</div>
-  )
+    <ClerkProvider>
+            <main>{children}</main>
+    </ClerkProvider>
+  );
 }
 
-export default layout
+export default AppLayout;
