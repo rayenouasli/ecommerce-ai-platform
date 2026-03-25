@@ -1,5 +1,9 @@
-import { Suspense } from "react";
+import { Carousel } from "@/components/ui/carousel";
 import { sanityFetch } from "@/sanity/lib/live";
+import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { ALL_CATEGORIES_QUERY } from "@/sanity/lib/queries/categories";
+import { CategoryTiles } from "@/components/CategoryTiles";
+import { FeaturedCarouselSkeleton } from "@/components/FeaturedCarouselSkeleton";
 import {
   FEATURED_PRODUCTS_QUERY,
   FILTER_PRODUCTS_BY_NAME_QUERY,
@@ -7,7 +11,8 @@ import {
   FILTER_PRODUCTS_BY_PRICE_DESC_QUERY,
   FILTER_PRODUCTS_BY_RELEVANCE_QUERY,
 } from "@/sanity/lib/queries/products";
-import { ALL_CATEGORIES_QUERY } from "@/sanity/lib/queries/categories";
+import { Suspense } from "react";
+
 interface PageProps {
   searchParams: Promise<{
     q?: string;
@@ -21,7 +26,7 @@ interface PageProps {
   }>;
 }
 
-export default async function HomePage({ searchParams }: PageProps) {
+export default async function Home({ searchParams }: PageProps) {
   const params = await searchParams;
 
   const searchQuery = params.q ?? "";
@@ -52,6 +57,16 @@ export default async function HomePage({ searchParams }: PageProps) {
     }
   };
 
+  // Fetch categories for filter sidebar
+  const { data: categories } = await sanityFetch({
+    query: ALL_CATEGORIES_QUERY,
+  });
+
+   // Fetch featured products for carousel
+   const { data: featuredProducts } = await sanityFetch({
+    query: FEATURED_PRODUCTS_QUERY,
+  });
+
   // Fetch products with filters (server-side via GROQ)
   const { data: products } = await sanityFetch({
     query: getQuery(),
@@ -64,16 +79,6 @@ export default async function HomePage({ searchParams }: PageProps) {
       maxPrice,
       inStock,
     },
-  });
-
-  // Fetch categories for filter sidebar
-  const { data: categories } = await sanityFetch({
-    query: ALL_CATEGORIES_QUERY,
-  });
-
-  // Fetch featured products for carousel
-  const { data: featuredProducts } = await sanityFetch({
-    query: FEATURED_PRODUCTS_QUERY,
   });
 
   return (
@@ -103,14 +108,6 @@ export default async function HomePage({ searchParams }: PageProps) {
             activeCategory={categorySlug || undefined}
           />
         </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <ProductSection
-          categories={categories}
-          products={products}
-          searchQuery={searchQuery}
-        />
       </div>
     </div>
   );
