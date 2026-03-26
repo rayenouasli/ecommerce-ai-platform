@@ -1,9 +1,10 @@
 import { Carousel } from "@/components/ui/carousel";
 import { sanityFetch } from "@/sanity/lib/live";
-import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { FeaturedCarousel } from "@/components/LandingPage/FeaturedCarousel";
 import { ALL_CATEGORIES_QUERY } from "@/sanity/lib/queries/categories";
-import { CategoryTiles } from "@/components/CategoryTiles";
-import { FeaturedCarouselSkeleton } from "@/components/FeaturedCarouselSkeleton";
+import { CategoryTiles } from "@/components/LandingPage/CategoryTiles";
+import { ProductSection } from "@/components/LandingPage/ProductSection";
+import { FeaturedCarouselSkeleton } from "@/components/LandingPage/FeaturedCarouselSkeleton";
 import {
   FEATURED_PRODUCTS_QUERY,
   FILTER_PRODUCTS_BY_NAME_QUERY,
@@ -108,6 +109,13 @@ export default async function Home({ searchParams }: PageProps) {
             activeCategory={categorySlug || undefined}
           />
         </div>
+      </div>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <ProductSection
+          categories={categories}
+          products={products}
+          searchQuery={searchQuery}
+        />
       </div>
     </div>
   );
